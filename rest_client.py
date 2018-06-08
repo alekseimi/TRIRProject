@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+import util
 
 
 currency_symbols = {
@@ -83,7 +84,7 @@ def request_historical_price(currency, timestamp):
 
 def get_currency_data(user, repo):
     url = 'https://api.github.com/repos/'
-    token = 'c54b8984b907dd89484e9efea40e1a116a072fc4'
+    token = util.get_auth_token()
 
     user = user
     repo = repo
