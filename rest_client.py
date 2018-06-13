@@ -5,11 +5,11 @@ import util
 
 currency_symbols = {
     'bitcoin': 'BTC',
-    'komodo': 'KMD',
+    'SuperNET': 'KMD',
     'eos': 'EOS',
-    'cardano': 'ADA',
+    'cardano-sl': 'ADA',
     'lisk': 'LSK',
-    '0x1': 'ZRX'
+    '0x.js': 'ZRX'
 }
 
 
@@ -50,6 +50,7 @@ def parse_frequencies(data):
 
 
 def parse_historical_prices(data, currency):
+
     currency_symbol = currency_symbols[currency]
     currency_price_list = [data[currency_symbol]['BTC'],
                            data[currency_symbol]['EUR']]
