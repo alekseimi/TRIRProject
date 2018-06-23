@@ -1,4 +1,4 @@
-,timestamp,contributors,commits,additions,deletions,BTC_price,EUR_price
+,timestamp,contributors_KMD,commits_KMD,additions_KMD,deletions_KMD,BTC_price_KMD,EUR_price_KMD
 0,1497744000.0,0.0,346.0,2363.0,1615.0,0.0009003,2.01
 1,1498348800.0,0.0,73.0,622.0,484.0,0.0007783,1.73
 2,1498953600.0,0.0,315.0,3073.0,1972.0,0.0006424,1.41

@@ -9,7 +9,8 @@ currency_symbols = {
     'eos': 'EOS',
     'cardano-sl': 'ADA',
     'lisk': 'LSK',
-    '0x.js': 'ZRX'
+    '0x.js': 'ZRX',
+    'skycoin': 'SKY'
 }
 
 
@@ -98,7 +99,12 @@ def get_currency_data(user, repo):
     json_frequency = request_frequency(url, user, repo, token)
     frequencies_list = parse_frequencies(json_frequency)
 
-    columns = ['timestamp', 'contributors', 'commits', 'additions', 'deletions', 'BTC_price', 'EUR_price']
+    columns = ['timestamp', 'contributors_'+currency_symbols[repo], 'commits_'+currency_symbols[repo], 'additions_' +
+               currency_symbols[repo], 'deletions_' + currency_symbols[repo], 'BTC_price_' + currency_symbols[repo],
+               'EUR_price_' + currency_symbols[repo]]
+
+
+    print(columns)
     df = pd.DataFrame(columns=columns)
 
     for i in range(0, 52):
