@@ -11,6 +11,16 @@ from sklearn.svm import SVR
 from sklearn import metrics
 import matplotlib.pyplot as plt
 
+
+def create_label(row, row_label):
+    print(row)
+    if row[row_label] > 0.09:
+        return 'rast'
+    if row[row_label] < -0.09:
+        return 'padec'
+    return 'enako'
+
+
 def predict_regression(input, output, naziv_boxplot):
     x_train, x_test, y_train, y_test = train_test_split(input, output, test_size=0.33, random_state=0)
 
@@ -26,8 +36,8 @@ def predict_regression(input, output, naziv_boxplot):
     lin_vec.fit(x_train, y_train)
     lin_vec_result = lin_vec.predict(x_test)
 
-    df_a = pd.DataFrame({'y_test': y_test, 'lr_result': lr_result,
-                         'dtr_result': dtr_result, 'lin_vec_result': lin_vec_result})
+    #df_a = pd.DataFrame({'y_test': y_test, 'lr_result': lr_result,
+                       #  'dtr_result': dtr_result, 'lin_vec_result': lin_vec_result})
 
     list_val = ('mean absolute error', 'metoda regresije')
     df_boxplot_mae = pd.DataFrame([[metrics.mean_absolute_error(lr_result, y_test), 'linearna regresija'],
@@ -207,22 +217,44 @@ for currency_abbr in currency_abbr_list:
     sns.distplot(df['contributors_'+currency_abbr], kde=False)
     plt.show()
 '''
+
+
+df_lisk_change = df_lisk.pct_change()
+df_lisk_change.dropna(axis=0, inplace=True)
+
+df_sky_change = df_sky.pct_change()
+df_sky_change = df_sky_change.replace([np.inf, -np.inf], np.nan)
+df_sky_change.dropna(axis=0, inplace=True)
+
+df_zrx_change = df_zrx.pct_change()
+df_zrx_change = df_zrx_change.replace([np.inf, -np.inf], np.nan)
+df_zrx_change.dropna(axis=0, inplace=True)
+
+df_ada_change = df_ada.pct_change()
+df_ada_change = df_ada_change.replace([np.inf, -np.inf], np.nan)
+df_ada_change.dropna(axis=0, inplace=True)
+
+df_eos_change = df_eos.pct_change()
+df_eos_change.dropna(axis=0, inplace=True)
+
+
+
+'''
+
+
 #REGRESIJA
 #EOS
 vhodi_eos = ['contributors_EOS', 'commits_EOS', 'additions_EOS',
              'deletions_EOS']
 izhodi_eos = 'BTC_price_EOS'
-df_eos_change = df_eos.pct_change()
-df_eos_change.dropna(axis=0, inplace=True)
+
 predict_regression(df_eos_change[vhodi_eos], df_eos_change[izhodi_eos], 'Valuta EOS')
 
 #ADA
 vhodi_ada = ['contributors_ADA', 'commits_ADA', 'additions_ADA',
              'deletions_ADA']
 izhodi_ada = 'BTC_price_ADA'
-df_ada_change = df_ada.pct_change()
-df_ada_change = df_ada_change.replace([np.inf, -np.inf], np.nan)
-df_ada_change.dropna(axis=0, inplace=True)
+
 print(df_ada_change)
 predict_regression(df_ada_change[vhodi_ada], df_ada_change[izhodi_ada], 'Valuta ADA')
 
@@ -230,32 +262,32 @@ predict_regression(df_ada_change[vhodi_ada], df_ada_change[izhodi_ada], 'Valuta 
 vhodi_lsk = ['contributors_LSK', 'commits_LSK', 'additions_LSK',
              'deletions_LSK']
 izhodi_lsk = 'BTC_price_LSK'
-df_lisk_change = df_lisk.pct_change()
-df_lisk_change.dropna(axis=0, inplace=True)
+
 predict_regression(df_lisk_change[vhodi_lsk], df_lisk_change[izhodi_lsk], 'Valuta LISK')
 
 #SKY
 vhodi_sky = ['contributors_SKY', 'commits_SKY', 'additions_SKY',
              'deletions_SKY']
 izhodi_sky = 'BTC_price_SKY'
-df_sky_change = df_sky.pct_change()
-df_sky_change = df_sky_change.replace([np.inf, -np.inf], np.nan)
-df_sky_change.dropna(axis=0, inplace=True)
+
 predict_regression(df_sky_change[vhodi_sky], df_sky_change[izhodi_sky], 'Valuta SKY')
 
 #ZRX
 vhodi_zrx = ['contributors_ZRX', 'commits_ZRX', 'additions_ZRX',
              'deletions_ZRX']
 izhodi_zrx = 'BTC_price_ZRX'
-df_zrx_change = df_zrx.pct_change()
-df_zrx_change = df_zrx_change.replace([np.inf, -np.inf], np.nan)
-df_zrx_change.dropna(axis=0, inplace=True)
+
 predict_regression(df_zrx_change[vhodi_zrx], df_zrx_change[izhodi_zrx], 'Valuta ZRX')
 
-#Napoved cene na podlagi števila commitov, števila contributorje in števila vrstic kode
+'''
 
-#Pregled gibanje cene kriptovalute skozi čas
+'''
+KLASIFIKACIJA
+'''
+#BTC_price_ZRX
+print(df_zrx_change)
+df_zrx_change['label'] = df_zrx_change.apply(lambda row: create_label(row, 'BTC_price_ZRX'), axis=1)
+print(df_zrx_change)
 
 
-
-
+#df_zrx_change['label'] = df.apply(lambda row: create_label(row, 'BTC_price_ZRX'))
