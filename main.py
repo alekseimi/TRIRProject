@@ -1,4 +1,4 @@
-from rest_client import get_currency_data
+#from rest_client import get_currency_data
 import pandas as pd
 from functools import reduce
 import seaborn as sns
@@ -8,6 +8,21 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.svm import SVR
+
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC, LinearSVC
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import ExtraTreeClassifier
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.linear_model import LogisticRegression
+
+from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import KFold
+from sklearn.model_selection import cross_val_score
+
 from sklearn import metrics
 import matplotlib.pyplot as plt
 
@@ -64,6 +79,49 @@ def predict_regression(input, output, naziv_boxplot):
     sns.barplot(x="metoda regresije", y="r^2", data=df_boxplot_r2, palette="Reds").set_title(naziv_boxplot)
     plt.xticks(rotation=0)
     plt.show()
+
+
+def predict_classification(df, input, output):
+    classifier_list = [
+        KNeighborsClassifier(),
+        LinearSVC(),
+        GaussianNB(),
+        DecisionTreeClassifier(),
+        RandomForestClassifier(),
+        ExtraTreeClassifier(),
+        AdaBoostClassifier(),
+        GradientBoostingClassifier(),
+        LogisticRegression()
+    ]
+    results_array = []
+    print(len(df))
+
+    for classifier in classifier_list:
+        kfold = KFold(n_splits=len(df), random_state=0)
+        cv_results = cross_val_score(classifier, df[input], df[output],
+                                     cv=kfold, scoring="accuracy")
+        print(cv_results)
+        results_array.append(cv_results.mean())
+        print(cv_results.mean())
+
+
+    list_val = ('natančnost', 'klasifikator')
+    df_classification = pd.DataFrame([[results_array[0], classifier_list[0]],
+                                         [results_array[1], classifier_list[1]],
+                                         [results_array[2], classifier_list[2]],
+                                         [results_array[3], classifier_list[3]],
+                                         [results_array[4], classifier_list[4]],
+                                         [results_array[5], classifier_list[5]],
+                                         [results_array[6], classifier_list[6]]], columns=list_val)
+
+    sns.barplot(x="klasifikator", y="natančnost", data=df_classification, palette="Reds")
+    plt.xticks(rotation=-60)
+    plt.show()
+
+
+
+#def predict_classification(df):
+
 
 
 #BTC, EOS, ADA, LSK, ZRX, SKY
@@ -278,16 +336,41 @@ vhodi_zrx = ['contributors_ZRX', 'commits_ZRX', 'additions_ZRX',
 izhodi_zrx = 'BTC_price_ZRX'
 
 predict_regression(df_zrx_change[vhodi_zrx], df_zrx_change[izhodi_zrx], 'Valuta ZRX')
-
 '''
 
 '''
 KLASIFIKACIJA
 '''
+
+#EOS, ADA, LSK, SKY, ZRX
+
+#BTC_price_EOS
+df_eos_change['label'] = df_eos_change.apply(lambda  row: create_label(row, 'BTC_price_EOS'), axis=1)
+input_list = ['commits_EOS', 'additions_EOS',
+             'deletions_EOS', 'contributors_EOS']
+output_list = 'label'
+#predict_classification(df_eos_change, input_list, output_list)
+
+#BTC_price_ADA
+df_ada_change['label'] = df_ada_change.apply(lambda  row: create_label(row, 'BTC_price_ADA'), axis=1)
+input_list = ['commits_ADA', 'additions_ADA',
+              'deletions_ADA', 'contributors_ADA']
+output_list = 'label'
+predict_classification(df_ada_change, input_list, output_list)
+
+
+#BTC_price_LSK
+df_lisk_change['label'] = df_lisk_change.apply(lambda  row: create_label(row, 'BTC_price_LSK'), axis=1)
+input_list = ['commits_ADA', 'additions_ADA',
+              'deletions_ADA', 'contributors_ADA']
+output_list = 'label'
+predict_classification(df_ada_change, input_list, output_list)
+print(df_lisk_change)
+
+#BTC_price_SKY
+df_sky_change['label'] = df_sky_change.apply(lambda row: create_label(row, 'BTC_price_SKY'), axis=1)
+print(df_sky_change)
 #BTC_price_ZRX
-print(df_zrx_change)
-df_zrx_change['label'] = df_zrx_change.apply(lambda row: create_label(row, 'BTC_price_ZRX'), axis=1)
-print(df_zrx_change)
+#df_zrx_change['label'] = df_zrx_change.apply(lambda row: create_label(row, 'BTC_price_ZRX'), axis=1)
+#print(df_zrx_change)
 
-
-#df_zrx_change['label'] = df.apply(lambda row: create_label(row, 'BTC_price_ZRX'))
